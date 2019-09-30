@@ -3,8 +3,12 @@
  * Contains 'Graph' class 
  */
 
+#ifndef _GRAPH_
+#define _GRAPH_
+
 #include <iostream>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -18,10 +22,6 @@ class Graph {
 // Private 
 private:
 
-    // Declaration
-    class Edge;
-    class Node;
-
     /*
     * Node Class (Private)
     */
@@ -30,7 +30,7 @@ private:
     // private
     private:
         int index;
-        vector<Edge> in_edges, out_edges;
+        vector<Node> in_edges, out_edges;
     
     // public
     public:
@@ -39,8 +39,8 @@ private:
          */
         Node(int index) {
             this->index = index;
-            this->in_edges = vector<Edge>();
-            this->out_edges = vector<Edge>();
+            this->in_edges = vector<Node>();
+            this->out_edges = vector<Node>();
         }
 
         /*
@@ -53,39 +53,16 @@ private:
         /*
          * Adding edge for the node (whether incoming or outgoing)
          */
-        void addEdge(Edge edge, bool incoming) {
+        void addEdge(Node& other, bool incoming) {
             if (incoming)
-                in_edges.push_back(edge);
+                in_edges.push_back(other);
             else
-                out_edges.push_back(edge);
-        }
-    };
-
-    /*
-     * Edge Class (Private)
-     */
-    class Edge {
-    
-    // Private
-    private:
-        Node *source, *end;
-        
-    // Public
-    public:
-        /*
-         * Constructor
-         */
-        Edge(Node* a, Node* b) {
-            a->addEdge(*this, false);
-            b->addEdge(*this, true);
-            this->source = a;
-            this->end = b;
+                out_edges.push_back(other);
         }
     };
 
     // Containers for the graph
     vector<Node> nodes;
-    vector<Edge> edges;
 
 // Public
 public:
@@ -94,7 +71,6 @@ public:
      * Constructor
      */
     Graph() {
-        this->edges = vector<Edge>();
         this->nodes = vector<Node>();
     }
 
@@ -129,6 +105,9 @@ public:
             nodes.push_back(*b_);
         }
         // Adding edge
-        edges.push_back(Edge(a_, b_));
+        a_->addEdge(*b_, false);
+        b_->addEdge(*a_, true);
     }
 };
+
+#endif
