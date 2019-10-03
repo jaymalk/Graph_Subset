@@ -35,7 +35,7 @@ void read(string filename, Graph& gl, Graph& gs) {
             // Break if graph is complete
             if((v1 == 0) && (v2 == 0)) break;
             // Adding edge if valid
-            gl.addEdge(v1, v2);
+            gl.add_edge(v1, v2);
         }
         // Reading the second graph
         while(getline(input, line)) {
@@ -46,7 +46,7 @@ void read(string filename, Graph& gl, Graph& gs) {
             l_ >> v1;
             l_ >> v2;
             // Adding edge if valid
-            gs.addEdge(v1, v2);
+            gs.add_edge(v1, v2);
         }
     } 
     catch(...) {
