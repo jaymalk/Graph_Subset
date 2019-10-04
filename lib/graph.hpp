@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <set>
 
 using namespace std;
@@ -23,7 +24,7 @@ private:
     // index of the node
     int index;
     // in and out edges if the node
-    vector<Node> in_edges, out_edges;
+    vector<int> in_edges, out_edges;
     // the candidate set
     set<Node> candidates;
 
@@ -35,8 +36,8 @@ public:
      */
     Node(int index) {
         this->index = index;
-        this->in_edges = vector<Node>();
-        this->out_edges = vector<Node>();
+        this->in_edges = vector<int>();
+        this->out_edges = vector<int>();
     }
     /*
      * Return the index of the node
@@ -50,7 +51,7 @@ public:
      * @param other (Node&) : other node in the edge
      * @param incoming (bool) : whether the edge is incoming or outgoing
      */
-    void add_edge(Node& other, bool incoming) {
+    void add_edge(int other, bool incoming) {
         if (incoming) {
             in_edges.push_back(other);
         }
@@ -64,7 +65,7 @@ public:
      * @param _in (bool default:false) : whether incoming or outgoing edges are needed
      * @return in/out _edges (vector<Node>&)
      */
-    vector<Node>& edges(bool _in = false) {
+    vector<int>& edges(bool _in = false) {
         if(_in) return in_edges;
         return out_edges;
     }
@@ -105,6 +106,10 @@ private:
 
     // The vector containing all the nodes in the graph
     vector<Node> nodes;
+    // Maximum index of the graph
+    int _size;
+    // Edges in the graph (as pair of indices)
+    set<pair<int, int>> _edges;
 
 // Public
 public:
@@ -114,6 +119,8 @@ public:
      */
     Graph() {
         this->nodes = vector<Node>();
+        this->_size = 0;
+        this->_edges = set<pair<int, int>>();
     }
 
     /*
@@ -145,6 +152,15 @@ public:
     }
 
     /*
+     * Check whether there is an edge (consiting of index pairs) in the graph
+     * @param _i, _j (int) : the indices of the edge _i -> _j
+     * @return (bool) existence
+     */
+    bool contains_edge(int _i, int _j) {
+        return _edges.find({_i,_j}) != _edges.end();
+    }
+
+    /*
      * Get all the nodes in the graph
      * @return nodes_ (vector<Node>&)
      */
@@ -153,10 +169,21 @@ public:
     }
 
     /*
+     * Getting the size of the graph
+     * @return _size (int)
+     */
+    int size() {
+        return _size;
+    }
+
+    /*
      * Adding an edge in the graph, adds an edge from the node with index a to the node with index b (a -> b)
      * @param a, b (int) : indices of the nodes involved
      */
     void add_edge(int a, int b) {
+        // Resetting the size accordingly
+        if(a>_size) _size = a;
+        if(b>_size) _size = b;
         // Processing node with index 'a'
         // Adding if it doesnt exist
         if(!contains_node(a)) {
@@ -172,8 +199,10 @@ public:
         // Getting the node
         Node& b_ = get_node(b);
         // Adding edges in the node
-        b_.add_edge(a_, true);
-        a_.add_edge(b_, false);
+        b_.add_edge(a, true);
+        a_.add_edge(b, false);
+        // Adding the edge in the graph
+        _edges.insert({a, b});
     }
 };
 

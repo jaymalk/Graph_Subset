@@ -48,6 +48,8 @@ void read(string filename, Graph& gl, Graph& gs) {
             // Adding edge if valid
             gs.add_edge(v1, v2);
         }
+        // Closing the stream
+        input.close();
     } 
     catch(...) {
         cout << "Some error in reading the file: "+filename+" [reader.read]\n";
