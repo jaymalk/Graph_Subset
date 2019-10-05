@@ -105,5 +105,25 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
 /*
  * Removing all the candidates which have been assigned
  */
-
+void remove_mapped_variable(Graph& g) {
+    // Looping on the nodes of g1
+    for(Node& n_: g.nodes_()) {
+        // Getting the candidates set
+        set<tuple<int, int, int>>& _cand1 = n_.get_set();
+        // Return if not signled out
+        if(_cand1.size() > 1) return;
+        // The current value
+        tuple<int, int, int> _val = *(_cand1.begin());
+        // Looping on all the nodes
+        for(Node& m_ : g.nodes_()) {
+            // Skipping the same node
+            if(m_.index_() == n_.index_()) continue;
+            // Getting the candidate set of other
+            set<tuple<int, int, int>>& _cand2 = m_.get_set();
+            // Removing if it exists
+            if(_cand2.find(_val) != _cand2.end())
+                _cand2.erase(_val);
+        }
+    }
+}
 #endif

@@ -39,9 +39,6 @@ int main(int argc, char const *argv[])
     // Secondary reduction (based on arc consitency)
     cout << "Binary\n";
     while(secondary_reduction(gs, gl));
-    // Sorting nodes according to the no. candidates left
-    sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2) {return _1.get_set().size() < _2.get_set().size();});
-    // TODO
     for(Node& n_: gs.nodes_()) {
         cout << "Node: " << n_.index_() << " -> ";
         for(auto it=n_.get_set().begin(); it!=n_.get_set().end(); it++) {
@@ -50,7 +47,18 @@ int main(int argc, char const *argv[])
         }
         cout << "\n";
     }
+    // Sorting nodes according to the no. candidates left
+    sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2) {return _1.get_set().size() < _2.get_set().size();});
     // Reduce single mappings
-
+    remove_mapped_variable(gs);
+    cout << "Singular Removal\n";
+    for(Node& n_: gs.nodes_()) {
+        cout << "Node: " << n_.index_() << " -> ";
+        for(auto it=n_.get_set().begin(); it!=n_.get_set().end(); it++) {
+            tuple<int, int, int> m_ = *it;
+            cout << get<0>(m_) << " ";
+        }
+        cout << "\n";
+    }
     return 0;
 }
