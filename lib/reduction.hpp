@@ -3,6 +3,7 @@
  */
 
 #include <set>
+#include <tuple>
 #include <vector>
 
 #include "graph.hpp"
@@ -20,14 +21,14 @@ void unary_reduction(Graph& g1) {
         // Getting the present node incoming and outgoing degrees
         int _fs = n_.edges(false).size(), _ts = n_.edges(true).size();
         // Getting the candidate set
-        set<Node>& _cand = n_.get_set();
+        set<tuple<int, int, int>>& _cand = n_.get_set();
         // Looping over all candidates
-        set<Node>::iterator iter = _cand.begin(), crnt;
+        set<tuple<int, int, int>>::iterator iter = _cand.begin(), crnt;
         while(iter != _cand.end()) {
-            Node m_ = *iter;
+            tuple<int, int, int> m_ = *iter;
             crnt = iter++;
             // Checking if candidate is valid
-            if(m_.edges(false).size() < _fs || m_.edges(true).size() < _ts)
+            if(get<2>(m_) < _fs || get<1>(m_) < _ts)
                 // Remove if not 
                 _cand.erase(crnt);
         }
@@ -45,22 +46,22 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
     // Looping on the nodes of g1
     for(Node& n_: g1.nodes_()) {
         // Getting the candidates set
-        set<Node>& _cand1 = n_.get_set();
+        set<tuple<int, int, int>>& _cand1 = n_.get_set();
         // Looping on all the neighbours of n_ (outgoing edge from n_ to m_)
         for(int _m: n_.edges()) {
             // Getting the candidates set
-            set<Node>& _cand2 = g1.get_node(_m).get_set();
+            set<tuple<int, int, int>>& _cand2 = g1.get_node(_m).get_set();
             // Now we test all candidates of n_
-            set<Node>::iterator itr = _cand1.begin(), crnt, itr2;
+            set<tuple<int, int, int>>::iterator itr = _cand1.begin(), crnt, itr2;
             while(itr != _cand1.end()) {
                 _valid = false;
-                Node _1 = *itr;
+                tuple<int, int, int> _1 = *itr;
                 crnt = itr++;
                 itr2 = _cand2.begin();
                 while(itr2 != _cand2.end()) {
-                    Node _2 = *itr2;
+                    tuple<int, int, int> _2 = *itr2;
                     itr2++;
-                    if(g2.contains_edge(_1.index_(), _2.index_())) {
+                    if(g2.contains_edge(get<0>(_1), get<0>(_2))) {
                         _valid = true;
                         break;
                     }
@@ -74,18 +75,18 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
         // Looping on all the neighbours of n_ (incoming edge from m_ to n_)
         for(int _m: n_.edges(true)) {
             // Getting the candidates set
-            set<Node>& _cand2 = g1.get_node(_m).get_set();
+            set<tuple<int, int, int>>& _cand2 = g1.get_node(_m).get_set();
             // Now we test all candidates of n_
-            set<Node>::iterator itr = _cand1.begin(), crnt, itr2;
+            set<tuple<int, int, int>>::iterator itr = _cand1.begin(), crnt, itr2;
             while(itr != _cand1.end()) {
                 _valid = false;
-                Node _1 = *itr;
+                tuple<int, int, int> _1 = *itr;
                 crnt = itr++;
                 itr2 = _cand2.begin();
                 while(itr2 != _cand2.end()) {
-                    Node _2 = *itr2;
+                    tuple<int, int, int> _2 = *itr2;
                     itr2++;
-                    if(g2.contains_edge(_2.index_(), _1.index_())) {
+                    if(g2.contains_edge(get<0>(_2), get<0>(_1))) {
                         _valid = true;
                         break;
                     }

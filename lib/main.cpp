@@ -31,8 +31,8 @@ int main(int argc, char const *argv[])
     for(Node& n_: gs.nodes_()) {
         cout << "Node: " << n_.index_() << " -> ";
         for(auto it=n_.get_set().begin(); it!=n_.get_set().end(); it++) {
-            Node m_ = *it;
-            cout << m_.index_() << " ";
+            tuple<int, int, int> m_ = *it;
+            cout << get<0>(m_) << " ";
         }
         cout << "\n";
     }
@@ -43,8 +43,8 @@ int main(int argc, char const *argv[])
     for(Node& n_: gs.nodes_()) {
         cout << "Node: " << n_.index_() << " -> ";
         for(auto it=n_.get_set().begin(); it!=n_.get_set().end(); it++) {
-            Node m_ = *it;
-            cout << m_.index_() << " ";
+            tuple<int, int, int> m_ = *it;
+            cout << get<0>(m_) << " ";
         }
         cout << "\n";
     }

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <tuple>
 #include <set>
 
 using namespace std;
@@ -26,7 +27,7 @@ private:
     // in and out edges if the node
     vector<int> in_edges, out_edges;
     // the candidate set
-    set<Node> candidates;
+    set<tuple<int, int, int>> candidates;
 
 // public
 public:
@@ -75,14 +76,16 @@ public:
      * @param _nodes (vector<Node>&) : vector of all the suitable nodes
      */
     void create_set(vector<Node>& _nodes) {
-        this->candidates = set<Node>(_nodes.begin(), _nodes.end());
+        candidates = set<tuple<int, int, int>>();
+        for(Node& n_: _nodes)
+            candidates.insert({n_.index_(), n_.edges(true).size(), n_.edges(false).size()});
     }
 
     /*
      * Getting the candidate set of the node
      * @return candidates (set<Node>&)
      */
-    set<Node>& get_set() {
+    set<tuple<int, int, int>>& get_set() {
         return this->candidates;
     }
 
