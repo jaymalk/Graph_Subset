@@ -40,6 +40,7 @@ public:
         this->in_edges = vector<int>();
         this->out_edges = vector<int>();
     }
+
     /*
      * Return the index of the node
      * @return index (int)
@@ -47,6 +48,7 @@ public:
     int index_() {
         return index;
     }
+    
     /*
      * Adding edge for the node (whether incoming or outgoing)
      * @param other (Node&) : other node in the edge
@@ -83,7 +85,7 @@ public:
 
     /*
      * Getting the candidate set of the node
-     * @return candidates (set<Node>&)
+     * @return candidates (set<tuple<int, int, int>>&)
      */
     set<tuple<int, int, int>>& get_set() {
         return this->candidates;

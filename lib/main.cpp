@@ -39,6 +39,8 @@ int main(int argc, char const *argv[])
     // Secondary reduction (based on arc consitency)
     cout << "Binary\n";
     while(secondary_reduction(gs, gl));
+    // Sorting nodes according to the no. candidates left
+    sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2) {return _1.get_set().size() < _2.get_set().size();});
     // TODO
     for(Node& n_: gs.nodes_()) {
         cout << "Node: " << n_.index_() << " -> ";
@@ -48,5 +50,7 @@ int main(int argc, char const *argv[])
         }
         cout << "\n";
     }
+    // Reduce single mappings
+
     return 0;
 }

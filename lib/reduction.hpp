@@ -101,4 +101,9 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
     return change;
 }
 
+
+/*
+ * Removing all the candidates which have been assigned
+ */
+
 #endif
