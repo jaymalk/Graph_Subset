@@ -19,6 +19,11 @@ int main(int argc, char const *argv[])
     Graph gl = Graph(); // The graph g'
     // Reading from file and creating the graphs
     read(name, gl, gs);
+    // Set isolated nodes
+    gs.set_isolated();
+    gl.set_isolated();
+    // Confirming that there are more isolated nodes in the larger graph
+    assert(gs.isolated().size() < gl.isolated().size());
     cout << "Graph Created\n";
     // Adding candidates for nodes in graph g1 (all nodes of gl)
     for(Node& n_: gs.nodes_()) {

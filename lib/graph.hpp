@@ -111,6 +111,8 @@ private:
 
     // The vector containing all the nodes in the graph
     vector<Node> nodes;
+    // The indices of nodes that are isolated
+    vector<int> isolated_nodes;
     // Maximum index of the graph
     int _size;
     // Edges in the graph (as pair of indices)
@@ -171,6 +173,33 @@ public:
      */
     vector<Node>& nodes_() {
         return nodes;
+    }
+
+    /*
+     * Setting the isolated nodes of the graph.
+     * After all the nodes have been read, the node with max index is identified as the size of the graph. Now, all the nodes with lesser index that don't exist (yet) are isolated.
+     */
+    void set_isolated() {
+        // Temporary array for check
+        bool* __temp = new bool[_size];
+        // Setting is present
+        for(Node& n_: nodes) __temp[n_.index_()-1] = 1;
+        // Working with vector
+        this->isolated_nodes = vector<int>();
+        // Adding those not present
+        for(int i=0; i<_size; i++)
+            if(!__temp[i])
+                isolated_nodes.push_back(i+1);
+        // Freeing space
+        free(__temp);
+    }
+
+    /*
+     * Returning the list of isolated nodes in the graph
+     * @return vector<int>
+     */
+    vector<int>& isolated() {
+        return isolated_nodes;
     }
 
     /*
