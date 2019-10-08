@@ -183,6 +183,10 @@ public:
         // Temporary array for check
         bool* __temp = new bool[_size];
         // Setting is present
+        for (int i = 0; i < _size; i++)
+        {
+            __temp[i] = 0;
+        }
         for(Node& n_: nodes) __temp[n_.index_()-1] = 1;
         // Working with vector
         this->isolated_nodes = vector<int>();

@@ -5,6 +5,7 @@
 #include <set>
 #include <tuple>
 #include <vector>
+#include <fstream>
 
 #include "graph.hpp"
 
@@ -124,6 +125,33 @@ void remove_mapped_variable(Graph& g) {
             if(_cand2.find(_val) != _cand2.end())
                 _cand2.erase(_val);
         }
+    }
+}
+
+/*
+ * If a set is of size n, this function prints all subsets of size k to n-1 in the file
+ */
+void subset(int k, vector<int> set, vector<int> temp, int index, std::ofstream& file) {
+    // if set is empty, then nothing is possible
+    if (set.size() == 0) {
+    }
+    else if (k == (set.size() - index)) {
+        for (int i = 0; i < temp.size(); i++) {
+            file << "-" << (temp[i]) << " ";
+        }
+        for (int j = index; j < set.size(); j++) {
+            file << "-" << set[j] << " ";
+        }
+        file << 0 << endl;
+    }
+    else {
+        subset(k, set, temp, index + 1, file);
+        if (index < set.size()) {
+            temp.push_back(set[index]);
+            set.erase(set.begin());
+            subset(k-1, set, temp, index, file);
+        }
+
     }
 }
 #endif
