@@ -20,7 +20,7 @@ using namespace std;
  * @param gs (Graph&) : the graph g  (smaller graph, which is to be mapped)
  * @return (bool) : whether the isolated nodes can be mapped b/w the graphs
  */
-bool read(string filename, Graph& gl, Graph& gs) {
+void read(string filename, Graph& gl, Graph& gs) {
     try {
         string line; // Line buffer
         int v1, v2; // Vertex buffer
@@ -51,24 +51,9 @@ bool read(string filename, Graph& gl, Graph& gs) {
         }
         // Closing the stream
         input.close();
-
-        // Now pre-processing the graph for isolated nodes
-        
-        // Set isolated nodes
-        gs.set_isolated();
-        gl.set_isolated();
-
-        // Adding candidates for nodes in graph g1 (all nodes of gl)
-        for(Node& n_: gs.nodes_()) {
-            n_.create_set(gl.nodes_());
-        }
-
-        // Return whether all the isolated nodes can be satisfied
-        return gs.isolated().size() <= gl.isolated().size();
     } 
     catch(...) {
         cout << "Some error in reading the file: "+filename+" [reader.read]\n";
-        return false;
     }
 }
 

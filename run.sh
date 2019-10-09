@@ -10,3 +10,5 @@ _nm=$1
 mkdir ".result"
 mv "$_nm"* ./".result"/
 mv ".result" "$_nm.result"
+# Now confirming that the results are correct
+python2 ./.resources/check.py ./"$_nm.result"/"$_nm.graphs" ./"$_nm.result"/"$_nm.mapping"
