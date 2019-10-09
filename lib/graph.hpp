@@ -80,7 +80,7 @@ public:
     void create_set(vector<Node>& _nodes) {
         candidates = set<tuple<int, int, int>>();
         for(Node& n_: _nodes)
-            candidates.insert({n_.index_(), n_.edges(true).size(), n_.edges(false).size()});
+            candidates.insert(tuple<int, int, int>(n_.index_(), n_.edges(true).size(), n_.edges(false).size()));
     }
 
     /*
@@ -168,6 +168,14 @@ public:
     }
 
     /*
+    * Get the edges set of the graph
+    * @return (set<pair<int, int>>) edges_
+    */
+    set<pair<int, int>>& edges() {
+        return _edges;
+    }
+
+    /*
      * Get all the nodes in the graph
      * @return nodes_ (vector<Node>&)
      */
@@ -181,12 +189,8 @@ public:
      */
     void set_isolated() {
         // Temporary array for check
-        bool* __temp = new bool[_size];
+        bool* __temp = new bool[_size]();
         // Setting is present
-        for (int i = 0; i < _size; i++)
-        {
-            __temp[i] = 0;
-        }
         for(Node& n_: nodes) __temp[n_.index_()-1] = 1;
         // Working with vector
         this->isolated_nodes = vector<int>();

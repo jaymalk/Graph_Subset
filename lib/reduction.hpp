@@ -36,6 +36,8 @@ void unary_reduction(Graph& g1) {
     }
 }
 
+bool remove_mapped_variable(Graph& g);
+
 /*
  * A minimal attempt at arc-consistency
  * Runs arc-consistency multiple times in order until no changes are observed
@@ -99,20 +101,22 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
             }
         }
     }
-    return change;
+    return change || remove_mapped_variable(g1);
 }
 
 
 /*
  * Removing all the candidates which have been assigned
  */
-void remove_mapped_variable(Graph& g) {
+bool remove_mapped_variable(Graph& g) {
+    // Local variable
+    bool removed = false;
     // Looping on the nodes of g1
     for(Node& n_: g.nodes_()) {
         // Getting the candidates set
         set<tuple<int, int, int>>& _cand1 = n_.get_set();
         // Return if not signled out
-        if(_cand1.size() > 1) return;
+        if(_cand1.size() > 1) continue;
         // The current value
         tuple<int, int, int> _val = *(_cand1.begin());
         // Looping on all the nodes
@@ -122,36 +126,13 @@ void remove_mapped_variable(Graph& g) {
             // Getting the candidate set of other
             set<tuple<int, int, int>>& _cand2 = m_.get_set();
             // Removing if it exists
-            if(_cand2.find(_val) != _cand2.end())
+            if(_cand2.find(_val) != _cand2.end()) {
                 _cand2.erase(_val);
+                removed = true;
+            }
         }
     }
+    return removed;
 }
 
-/*
- * If a set is of size n, this function prints all subsets of size k to n-1 in the file
- */
-void subset(int k, vector<int> set, vector<int> temp, int index, std::ofstream& file) {
-    // if set is empty, then nothing is possible
-    if (set.size() == 0) {
-    }
-    else if (k == (set.size() - index)) {
-        for (int i = 0; i < temp.size(); i++) {
-            file << "-" << (temp[i]) << " ";
-        }
-        for (int j = index; j < set.size(); j++) {
-            file << "-" << set[j] << " ";
-        }
-        file << 0 << endl;
-    }
-    else {
-        subset(k, set, temp, index + 1, file);
-        if (index < set.size()) {
-            temp.push_back(set[index]);
-            set.erase(set.begin());
-            subset(k-1, set, temp, index, file);
-        }
-
-    }
-}
 #endif
