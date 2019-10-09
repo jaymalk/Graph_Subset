@@ -57,16 +57,19 @@ def CheckMap(M,G1,G2):
 		n	=	M.keys();
 		n1	=	[M[a] for a in n];
 		if(not(len(n1) == len(set(n1)))):
-			return False;
+			return False, 1;
 		for i in n:
 			for j in n:
 				if(not (i==j)):
 					if(not((j in G2[i]))==(M[j] in G1[M[i]])):
-						return False;
+						return False, 2;
+					else:
+						pass
+						# print('Correct for:', (i, j) )
 		return True;
 	except KeyError:
 		print("Bad Input: Invalid Node Id");
-		return False;
+		return False, 3;
 
 def main():
 

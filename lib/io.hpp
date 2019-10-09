@@ -77,6 +77,8 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
     map<pair<int, int>, int> _var;
     // Temporary container
     vector<int> _v;
+    // Check of singular nodes
+    set<int> __singular;
     // Map of gs-nodes for which a gl-node is a candidate
     map<int, vector<int> > gl_cands;
     // Clause count
@@ -87,7 +89,7 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
     for (Node& n_: gs.nodes_()) {
         _v.clear();
         // If multiple possibilities  for match
-        if (n_.get_set().size() > 1) {
+        if (n_.get_set().size() > 0) {
             for (auto it = n_.get_set().begin(); it!=n_.get_set().end(); it++) {
                 tuple<int, int, int> m_ = *it;
                 // Setting count
@@ -102,20 +104,15 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
                     gl_cands.at(get<0>(m_)).push_back(n_.index_());
                 }
                 else {
-                    gl_cands.insert(pair<int, vector<int>> (get<0>(m_), vector<int> ()));
+                    gl_cands.insert(pair<int, vector<int>> (get<0>(m_), vector<int>()));
                     gl_cands.at(get<0>(m_)).push_back(n_.index_());
                 }
                 
                 _cnt ++;
             }
         }
-        // If singly matched
-        else {
-            // Write on file
-            _map << 0 << " " << n_.index_() << " " << get<0>(*(n_.get_set().begin())) << endl;
-        }
         // For keeping the check of clauses
-        if (_v.size() > 1) {
+        if (_v.size() >= 1) {
             gs_map.push_back(_v);
             _cls += (1 + _v.size()*(_v.size()-1)/2);
         }
@@ -126,7 +123,7 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
     //=============================================================================
     // Now writing the sat-clauses
     //=============================================================================
-
+    
     // Sat-input file
     ofstream _satout(_name + ".satinput");
     // Writing the header
@@ -161,12 +158,13 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
     // Working almost same with the larger graph
     for(auto& p_ : gl.edges()) {
         vector<int> _cand1 = gl_cands[p_.first], _cand2 = gl_cands[p_.second];
-        for(int i : _cand1)
+        for(int i : _cand1) {
             for(int j : _cand2) {
                 if(!gs.contains_edge(i, j)) {
                     _satout << "-" << _var[pair<int, int>(i, p_.first)] << " -" << _var[pair<int, int>(j, p_.second)] << " 0\n";
                 }
             }
+        }
     }
 
     // Writing the clauses for GL uniqueness

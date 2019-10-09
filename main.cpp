@@ -45,7 +45,6 @@ void run_1(int argc, char const *argv[])
     // Sorting to keep the nodes in order
     sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2){return _1.index_() < _2.index_();});
     
-
     // Writing the data created to files
     // 1. Write the singular and variable mappings
     // 2. Write the satinput file
@@ -56,7 +55,7 @@ void run_1(int argc, char const *argv[])
 // Second Runner
 void run_2(int argc, char const *argv[])
 {
-    assert(read_satoutput(argv[1]));
+    read_satoutput(argv[1]);
 }
 
 
