@@ -85,6 +85,10 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
 
     // Singular mappings and varaible mappings
     ofstream _map(_name + ".map");
+    // Writing for the isolated nodes
+    for(int i=0; i<gs.isolated().size(); i++) {
+        _map << "0 " << gs.isolated()[i] << " " << gl.isolated()[i] << "\n";
+    }
     // Vector of sets of possible mappings for a node
     vector<vector<int> > gs_map;
     // Map for holding the varaible names of mappings

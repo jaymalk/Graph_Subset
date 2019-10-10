@@ -34,14 +34,19 @@ void run_1(int argc, char const *argv[])
         n_.create_set(gl.nodes_());
     }
     // Return whether all the isolated nodes can be satisfied
-    assert(gs.isolated().size() <= gl.isolated().size());
+    if(gs.isolated().size() > gl.isolated().size()) {
+        write_unsat(argv[1]);
+        return;
+    }
     
     
     // Starting with reductions
     // First reduction (based on degrees)
     bool _sat = unary_reduction(gs);
     // Secondary reduction (based on arc consitency)
-    while(secondary_reduction(gs, gl, _sat));
+    for(int i=0; i<5; i++)
+        secondary_reduction(gs, gl, _sat);
+    // while(secondary_reduction(gs, gl, _sat));
     // Sorting to keep the nodes in order
     sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2){return _1.index_() < _2.index_();});
     
