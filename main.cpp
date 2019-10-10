@@ -39,16 +39,23 @@ void run_1(int argc, char const *argv[])
     
     // Starting with reductions
     // First reduction (based on degrees)
-    unary_reduction(gs);
+    bool _sat = unary_reduction(gs);
     // Secondary reduction (based on arc consitency)
-    while(secondary_reduction(gs, gl));
+    while(secondary_reduction(gs, gl, _sat));
     // Sorting to keep the nodes in order
     sort(gs.nodes_().begin(), gs.nodes_().end(), [](Node& _1, Node& _2){return _1.index_() < _2.index_();});
     
     // Writing the data created to files
     // 1. Write the singular and variable mappings
     // 2. Write the satinput file
-    write_map_input(argv[1], gs, gl);
+    // ----------OR------------
+    // Write the unsatisfiable satinput file
+    if (!_sat) {
+        write_unsat(argv[1]);
+    }
+    else {
+        write_map_input(argv[1], gs, gl);
+    }
 }
 
 

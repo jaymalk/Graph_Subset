@@ -57,6 +57,20 @@ void read(string filename, Graph& gl, Graph& gs) {
     }
 }
 
+/* Function for writing the unsatisfiable sat-input file
+ * @param_name: name header for files
+ */
+void write_unsat(string _name) {
+    // Sat-input file
+    ofstream _satout(_name + ".satinput");
+    // Writing the header
+    _satout << "p cnf " << 1 << " " << 0 << "\n";
+    _satout << "1 0\n";
+    _satout << "-1 0\n";
+
+    _satout.close();
+}
+
 /*
  * Function for writing the graph-mappings and reductions to sat-input (FOR FIRST RUNNER)
  * @param _name: name header for files
@@ -190,7 +204,6 @@ void write_map_input(string _name, Graph& gs, Graph& gl) {
 bool read_satoutput(string _name) {
     // Opening the files for input
     ifstream _sat(_name+".satoutput");
-    ifstream _premap(_name+".map");
     // Output file
     ofstream _map(_name+".mapping");
     // String container
@@ -198,7 +211,14 @@ bool read_satoutput(string _name) {
     // Reading the first line of SAT-output
     getline(_sat, out_string);
     // Analzysing the result
-    if(out_string != "SAT") return false;
+    if(out_string != "SAT") {
+        _map << "0";
+        _map.close();
+        _sat.close();
+        return false;
+    }
+
+    ifstream _premap(_name+".map");
     
     // Reading the satinput
     vector<int> _sat_result;

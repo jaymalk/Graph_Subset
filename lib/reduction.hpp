@@ -16,8 +16,9 @@
 /*
  * Reduction using the idea that incoming and outgoing degree of a match must be at least greater than that of the node.
  */
-void unary_reduction(Graph& g1) {
+bool unary_reduction(Graph& g1) {
     // Looping in the nodes of g1
+    bool _sat = true;
     for(Node& n_: g1.nodes_()) {
         // Getting the present node incoming and outgoing degrees
         int _fs = n_.edges(false).size(), _ts = n_.edges(true).size();
@@ -33,7 +34,14 @@ void unary_reduction(Graph& g1) {
                 // Remove if not 
                 _cand.erase(crnt);
         }
+        //Checking if candidate set has become empty for any node
+        if (_cand.empty()) {
+            //Not satisfiable
+            _sat = false;
+            break;
+        }
     }
+    return _sat;
 }
 
 bool remove_mapped_variable(Graph& g);
@@ -43,7 +51,7 @@ bool remove_mapped_variable(Graph& g);
  * Runs arc-consistency multiple times in order until no changes are observed
  * @return (bool) whether there was a change observed or not
  */
-bool secondary_reduction(Graph& g1, Graph& g2) {
+bool secondary_reduction(Graph& g1, Graph& g2, bool& _sat) {
     // Local variables
     bool _valid, change = false;
     // Looping on the nodes of g1
@@ -100,7 +108,13 @@ bool secondary_reduction(Graph& g1, Graph& g2) {
                 }
             }
         }
+        if (_cand1.empty()) {
+            _sat = false;
+            //to terminate the iterations
+            return false;
+        }
     }
+
     return change || remove_mapped_variable(g1);
 }
 
